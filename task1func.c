@@ -1,7 +1,7 @@
 #include "stdio.h"
 #include "stdlib.h"
 
-int Find_max_subsequence (int* array, int array_size, int* index1, int* index2) {
+int Find_max_subsequence (int* array, int array_size, int* index1) {
 	int maxsize = 0, temp_max_size = 0, begin_index = 0;
 
 	for(int i = 1; i < array_size; ++i){
@@ -10,10 +10,9 @@ int Find_max_subsequence (int* array, int array_size, int* index1, int* index2) 
 		{
 			temp_max_size++;
 
-			if ((i == array_size - 1) && (temp_max_size + 1 > maxsize))
+			if ((i == array_size - 1) && (temp_max_size + 1 > maxsize)) //last element check
 				{
 					*index1 = begin_index;
-					*index2 = i + 1; //last element
 					maxsize = ++temp_max_size;
 				}	
 		}
@@ -22,19 +21,16 @@ int Find_max_subsequence (int* array, int array_size, int* index1, int* index2) 
 			if (temp_max_size + 1 > maxsize) {
 				maxsize = ++temp_max_size;
 				*index1 = begin_index;
-				*index2 = i;
 				begin_index = i;
 			}
 			else begin_index = i;
 			temp_max_size = 0;
 		}
 	}
-
 	return maxsize;
 }
 
 int main() {
-
 	int array_size = 0;
 	scanf("%d", &array_size);
 
@@ -47,21 +43,21 @@ int main() {
 	int* array = (int *) malloc(array_size * sizeof(int));
 
 	for(int i = 0; i < array_size; ++i) {
-
-		if (scanf("%d", &array[i]) < 1) {  //right input check
+	    if (scanf("%d", &array[i]) < 1) {  //right input check
 		printf("%s", "[error]");
 		free(array);
 		return 0;
-		}
+	    }
 
 	}
-	int index1 = 0, index2 = 0;
-	int max_segment_size = Find_max_subsequence(array, array_size, &index1, &index2);
+	int index1 = 0;
+	int max_segment_size = Find_max_subsequence(array, array_size, &index1);
 
-	if ((max_segment_size == 1) | (max_segment_size == 0)) printf("%d\n", 0);
+	if (max_segment_size <= 1) printf("%d\n", 0);
 	else {
 		printf("%d\n", max_segment_size);
-		for( ; index1 < index2; ++index1) printf("%d ", array[index1]);
+		//for( ; index1 < index2; ++index1) printf("%d ", array[index1]);
+		for(int i = index1; max_segment_size > 0 ; --max_segment_size) printf("%d ", array[i++]);	
 	}
 
 	free(array);
